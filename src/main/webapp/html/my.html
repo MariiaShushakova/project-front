@@ -4,8 +4,62 @@
     <script src=https://code.jquery.com/jquery-3.6.0.min.js></script>
     <link href="/css/my.css" rel="stylesheet">
 </head>
-<body>
+
+<body onload="show_list()">
+
 <h1>RPG admin panel</h1>
 
+<table> id="table_1">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Race</th>
+        <th>Profession</th>
+        <th>Level</th>
+        <th>Birthday</th>
+        <th>Banned</th>
+    </tr>
+</table>
+
+<div id="paging_button">Pages:</div>
+
+<script>
+    function show_list(){
+        let url = "/rest/players";
+        $.get(url, function (response) {
+            $.each(response, function(i, item){
+                $('<tr>').html("<td>"
+                    + item.id + "</td><td>"
+                    + item.name + "</td><td>"
+                    + item.title + "</td><td>"
+                    + item.race + "</td><td>"
+                    + item.profession + "</td><td>"
+                    + item.level + "</td><td>"
+                    + new Date(item.birthday).toLocaleDateString()  + "</td><td>"
+                    + item.banned + "</td>"
+
+                ).appendTo("#table_1");
+            });
+        });
+
+        let totalCount = getTotalCount();
+    }
+
+    function getTotalCount(){
+        let url = "/rest/players/count"
+        let res = 0;
+        $.ajax({
+            url: url,
+            success: function (result){
+                res = result;
+                res = parseInt(result);
+            }
+        })
+        console.log(res);
+        return res;
+    }
+
+</script>
 </body>
 </html>
